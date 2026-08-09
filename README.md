@@ -213,6 +213,16 @@ npm run dev
 | `npm run lint` | TypeScript 类型检查 |
 | `npm run clean` | 清理构建产物 |
 
+## 📜 历史文档快照
+
+为防止后续版本迭代导致旧版说明丢失，项目在 `docs/` 目录下保存了历史版本 README 快照：
+
+| 快照文件 | 对应版本 | 阶段说明 | 备份日期 |
+| --- | --- | --- | --- |
+| [README-v0.7.0.md](docs/README-v0.7.0.md) | [v0.7.0](https://github.com/joyce768768-glitch/huanyusixian/releases/tag/v0.7.0) | 前端商城版（仅用户端 H5，未合并后端） | 2026-08-09 |
+
+> 每次发大版本（如合并后端、接入新系统）前，建议用相同方式追加一份 README 快照。
+
 ## 🔗 相关链接
 
 - 📦 **仓库地址**：[github.com/joyce768768-glitch/huanyusixian](https://github.com/joyce768768-glitch/huanyusixian)

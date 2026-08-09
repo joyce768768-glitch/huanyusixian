@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  
+  --color-primary: #a53b22;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #ff7e5f;
+  --color-on-primary-container: #721702;
+  
+  --color-secondary: #496800;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #c8f17a;
+  --color-on-secondary-container: #4e6e00;
+  
+  --color-tertiary: #0060ac;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #63a6fa;
+  --color-on-tertiary-container: #003a6d;
+  
+  --color-background: #faf9f6;
+  --color-on-background: #1a1c1a;
+  --color-surface: #fdf9f0;
+  --color-on-surface: #1a1c1a;
+  --color-on-surface-variant: #57423d;
+  --color-surface-container: #efeeeb;
+  --color-surface-container-low: #f4f3f1;
+  --color-surface-container-high: #e9e8e5;
+  --color-surface-container-highest: #e3e2e0;
+  --color-surface-container-lowest: #ffffff;
+
+  --color-primary-fixed: #ffdad2;
+  --color-primary-fixed-dim: #ffb4a3;
+  --color-tertiary-fixed: #d4e3ff;
+  --color-secondary-fixed: #ffdf9f;
+  --color-on-tertiary-fixed-variant: #1e5031;
+  
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  
+  --color-outline: #8b716b;
+  --color-outline-variant: #dec0b9;
+
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface flex justify-center min-h-screen overflow-x-hidden;
+    font-family: var(--font-sans);
+  }
+}
+
+#root {
+  @apply w-full max-w-[480px] bg-background min-h-screen shadow-2xl relative flex flex-col;
+}
+
+.squishy-active:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

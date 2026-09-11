@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# 测试产物（可再生成，不入库）
+allure-results/
+allure-report/
+playwright-report/
+test-results/

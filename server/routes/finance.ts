@@ -9,9 +9,9 @@ router.get('/', (req, res) => {
   
   let filteredRecords = [...financeRecords];
   
-  // 分类筛选
+  // 分类筛选（category 字段为 income/expense）
   if (category && category !== 'all') {
-    filteredRecords = filteredRecords.filter(r => r.type === category);
+    filteredRecords = filteredRecords.filter(r => r.category === category);
   }
   
   // 关键词搜索

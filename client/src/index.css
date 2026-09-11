@@ -1,71 +1,210 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@600;700;900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Noto Sans SC", system-ui, -apple-system, sans-serif;
-  
-  --color-primary: #a53b22;
-  --color-on-primary: #ffffff;
-  --color-primary-container: #ff7e5f;
-  --color-on-primary-container: #721702;
-  
-  --color-secondary: #496800;
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: #c8f17a;
-  --color-on-secondary-container: #4e6e00;
-  
-  --color-tertiary: #0060ac;
-  --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #63a6fa;
-  --color-on-tertiary-container: #003a6d;
-  
-  --color-background: #faf9f6;
-  --color-on-background: #1a1c1a;
-  --color-surface: #fdf9f0;
-  --color-on-surface: #1a1c1a;
-  --color-on-surface-variant: #57423d;
-  --color-surface-container: #efeeeb;
-  --color-surface-container-low: #f4f3f1;
-  --color-surface-container-high: #e9e8e5;
-  --color-surface-container-highest: #e3e2e0;
-  --color-surface-container-lowest: #ffffff;
+  --font-serif: "Noto Serif SC", "Songti SC", serif;
 
-  --color-primary-fixed: #ffdad2;
-  --color-primary-fixed-dim: #ffb4a3;
-  --color-tertiary-fixed: #d4e3ff;
-  --color-secondary-fixed: #ffdf9f;
+  /* —— 品牌主色：朱砂红 / 暖陶土（绘本、印章、书封质感）—— */
+  --color-primary: #b23a24;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #f06543;
+  --color-on-primary-container: #6e1708;
+
+  --color-secondary: #5a6e12;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #dcecb0;
+  --color-on-secondary-container: #3d4d08;
+
+  --color-tertiary: #0b5fa5;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #6aa8f0;
+  --color-on-tertiary-container: #053a6b;
+
+  /* —— 贵宾金（会员/权益）—— */
+  --color-gold: #c08a2e;
+  --color-gold-light: #e9c779;
+  --color-on-gold: #3a2705;
+
+  /* —— 暖纸底色系 —— */
+  --color-background: #f6f1e7;
+  --color-on-background: #211b16;
+  --color-surface: #fbf7ef;
+  --color-on-surface: #211b16;
+  --color-on-surface-variant: #6f6058;
+  --color-surface-container: #efe8db;
+  --color-surface-container-low: #f4efe6;
+  --color-surface-container-high: #e8e0d2;
+  --color-surface-container-highest: #ded4c3;
+  --color-surface-container-lowest: #fffdf8;
+
+  --color-primary-fixed: #fbd9cf;
+  --color-primary-fixed-dim: #f4b2a0;
+  --color-tertiary-fixed: #d6e7fb;
+  --color-secondary-fixed: #f0e3b0;
   --color-on-tertiary-fixed-variant: #1e5031;
-  
+
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
-  
-  --color-outline: #8b716b;
-  --color-outline-variant: #dec0b9;
 
-  --radius-xl: 1.5rem;
-  --radius-2xl: 2rem;
+  --color-outline: #8c7a6e;
+  --color-outline-variant: #e3d4c6;
+
+  /* —— 圆角阶梯 —— */
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-3xl: 2.25rem;
+
+  /* —— 层次阴影（暖调、柔和、多层）—— */
+  --shadow-xs: 0 1px 2px rgba(80, 52, 33, 0.05);
+  --shadow-sm: 0 2px 8px -2px rgba(120, 72, 45, 0.10), 0 1px 3px rgba(120, 72, 45, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(120, 72, 45, 0.18), 0 2px 6px rgba(120, 72, 45, 0.06);
+  --shadow-lg: 0 18px 40px -14px rgba(120, 72, 45, 0.28), 0 6px 14px -6px rgba(120, 72, 45, 0.10);
+  --shadow-xl: 0 30px 64px -20px rgba(94, 54, 32, 0.40);
+  --shadow-glow: 0 10px 30px -6px rgba(178, 58, 36, 0.45);
+
+  /* —— 动效曲线 —— */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-on-surface flex justify-center min-h-screen overflow-x-hidden;
+    @apply text-on-surface antialiased;
     font-family: var(--font-sans);
+    /* 桌面预览时的环境氛围背景 */
+    background:
+      radial-gradient(1200px 600px at 15% -5%, rgba(240, 101, 67, 0.16), transparent 60%),
+      radial-gradient(1000px 700px at 100% 10%, rgba(192, 138, 46, 0.14), transparent 55%),
+      radial-gradient(900px 900px at 50% 120%, rgba(90, 110, 18, 0.10), transparent 60%),
+      #ece3d4;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { letter-spacing: -0.01em; }
+}
+
+/* —— 手机外壳：桌面端居中呈现为一部"手机"，移动端全屏 —— */
+#root {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+@media (min-width: 480px) {
+  #root {
+    height: calc(100vh - 48px);
+    margin: 24px 0;
+    border-radius: 40px;
+    box-shadow:
+      0 0 0 10px #1c1815,
+      0 0 0 12px rgba(255, 255, 255, 0.08),
+      0 50px 100px -30px rgba(60, 38, 24, 0.55);
   }
 }
 
-#root {
-  @apply w-full max-w-[480px] bg-background min-h-screen shadow-2xl relative flex flex-col;
+@layer components {
+  /* 卡片 */
+  .card {
+    @apply bg-surface-container-lowest rounded-2xl border border-outline-variant/50;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-elevated {
+    @apply bg-surface-container-lowest rounded-3xl border border-outline-variant/40;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* 毛玻璃 */
+  .glass {
+    background: rgba(251, 247, 239, 0.82);
+    backdrop-filter: blur(18px) saturate(1.6);
+    -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  }
+  .glass-dark {
+    background: rgba(33, 27, 22, 0.55);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  /* 品牌渐变文字 / 背景 */
+  .text-gradient {
+    background: linear-gradient(120deg, var(--color-primary), var(--color-primary-container));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #c8451f 0%, #d95d39 45%, #e88b4a 100%);
+  }
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #8a6420 0%, #c08a2e 50%, #e9c779 100%);
+  }
+
+  /* 主按钮 */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 font-bold text-on-primary rounded-full transition-all;
+    background: linear-gradient(135deg, #c8451f, #d95d39);
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  /* 骨架屏 */
+  .skeleton {
+    background: linear-gradient(90deg, var(--color-surface-container) 25%, var(--color-surface-container-high) 37%, var(--color-surface-container) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
 }
 
-.squishy-active:active {
-  transform: scale(0.96);
-  transition: transform 0.1s ease;
+@layer utilities {
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+
+  .squishy-active { transition: transform 0.18s var(--ease-spring); }
+  .squishy-active:active { transform: scale(0.95); }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* 入场动效 */
+  .animate-fade-up { animation: fadeUp 0.6s var(--ease-out) both; }
+  .animate-pop { animation: pop 0.4s var(--ease-spring) both; }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+  .stagger > * { animation: fadeUp 0.55s var(--ease-out) both; }
+  .stagger > *:nth-child(1) { animation-delay: 0.03s; }
+  .stagger > *:nth-child(2) { animation-delay: 0.09s; }
+  .stagger > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger > *:nth-child(4) { animation-delay: 0.21s; }
+  .stagger > *:nth-child(5) { animation-delay: 0.27s; }
+  .stagger > *:nth-child(6) { animation-delay: 0.33s; }
+  .stagger > *:nth-child(7) { animation-delay: 0.39s; }
+  .stagger > *:nth-child(8) { animation-delay: 0.45s; }
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }

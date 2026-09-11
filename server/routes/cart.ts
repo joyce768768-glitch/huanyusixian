@@ -1,5 +1,5 @@
 import express from 'express';
-import { cartItems, products, orders, MY_PARTNERS_USER_ID } from '../data/mockData';
+import { cartItems, products, orders, MY_PARTNERS_USER_ID, userCoupons } from '../data/mockData';
 
 const router = express.Router();
 
@@ -80,7 +80,7 @@ router.delete('/', (req, res) => {
 
 // 结算 -> 生成订单 + 清空对应购物车项
 router.post('/checkout', (req, res) => {
-  const { itemIds, remark } = req.body;
+  const { itemIds, remark, couponId } = req.body;
   let selected = cartItems.filter(c => c.userId === MY_PARTNERS_USER_ID);
   if (itemIds && Array.isArray(itemIds) && itemIds.length > 0) {
     selected = selected.filter(c => itemIds.includes(c.id) || c.selected);
@@ -102,8 +102,20 @@ router.post('/checkout', (req, res) => {
       image: p?.image || '',
     };
   });
-  const totalAmount = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
+  const subtotal = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
   const totalQty = orderItems.reduce((s, i) => s + i.quantity, 0);
+  // 优惠券抵扣
+  let discount = 0;
+  let coupon: any = null;
+  if (couponId) {
+    coupon = userCoupons.find((c: any) => c.id === couponId && c.status === 'unused' && (!c.userId || c.userId === MY_PARTNERS_USER_ID));
+    if (coupon && (!coupon.minSpend || subtotal >= coupon.minSpend)) {
+      if (coupon.discountType === 'amount') discount = coupon.amount || 0;
+      else if (coupon.discountType === 'shipping') discount = 15;
+      discount = Math.min(discount, subtotal);
+    }
+  }
+  const totalAmount = Math.max(0, subtotal - discount);
   const id = `ORD-${Date.now()}`;
   const now = new Date().toISOString().replace('T', ' ').slice(0, 16);
   const newOrder = {
@@ -119,7 +131,12 @@ router.post('/checkout', (req, res) => {
     color: 'blue', log: 'pay',
     remark: remark || '',
     items: orderItems,
+    couponId: couponId || '',
+    discount,
+    originalAmount: subtotal,
   };
+  // 标记优惠券已使用
+  if (coupon) (coupon as any).status = 'used';
   orders.unshift(newOrder as any);
 
   // 清空已结算购物车

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { X, MessageCircle, Share2 } from 'lucide-react';
-import { useState } from 'react';
+import { X, MessageCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { distributorAPI } from '@shared/api';
 
 interface ShareDrawerProps {
   isOpen: boolean;
@@ -9,6 +10,17 @@ interface ShareDrawerProps {
 
 export default function ShareDrawer({ isOpen, onClose }: ShareDrawerProps) {
   const [showPrompt, setShowPrompt] = useState(false);
+  const [inviteCode, setInviteCode] = useState('HY2026');
+
+  useEffect(() => {
+    if (isOpen) {
+      distributorAPI.getMyInviteCode().then(res => {
+        if (res.success && res.data?.inviteCode) {
+          setInviteCode(res.data.inviteCode);
+        }
+      });
+    }
+  }, [isOpen]);
 
   const handleWeChatClick = () => {
     setShowPrompt(true);
@@ -43,42 +55,50 @@ export default function ShareDrawer({ isOpen, onClose }: ShareDrawerProps) {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-surface-container-lowest rounded-t-3xl z-[101] px-6 pt-4 pb-12 shadow-[0_-8px_32px_rgba(0,0,0,0.1)]"
+              className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[430px] bg-surface-container-lowest rounded-t-[28px] z-[101] px-6 pt-3 pb-10 pb-safe shadow-2xl"
             >
               {/* Handle */}
               <div className="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mb-6" />
-              
-              <div className="flex justify-between items-center mb-8">
-                <h3 className="text-lg font-black text-on-surface">分享邀请</h3>
-                <button onClick={onClose} className="p-2 text-on-surface-variant">
-                  <X size={20} />
+
+              <div className="flex justify-between items-center mb-5">
+                <h3 className="font-serif text-lg font-black text-on-surface">分享邀请</h3>
+                <button onClick={onClose} aria-label="关闭" className="w-9 h-9 rounded-full bg-surface-container-high/60 flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform">
+                  <X size={18} />
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-8">
-                <button 
+              {/* 邀请码卡片 */}
+              <div className="rounded-2xl bg-brand-gradient text-white p-5 mb-7 relative overflow-hidden">
+                <div className="absolute -top-8 -right-6 w-28 h-28 rounded-full bg-white/15 blur-lg" />
+                <p className="text-[11px] text-white/85 font-bold">我的专属邀请码</p>
+                <p className="font-serif text-2xl font-black tracking-[0.3em] mt-1">{inviteCode}</p>
+                <p className="text-[10px] text-white/80 mt-1.5">好友下单，你最高可获 30% 佣金</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <button
                   onClick={handleWeChatClick}
-                  className="flex flex-col items-center gap-3 squishy-active"
+                  className="flex flex-col items-center gap-2.5 squishy-active"
                 >
-                  <div className="w-16 h-16 bg-[#07C160] rounded-2xl flex items-center justify-center text-white shadow-lg">
-                    <MessageCircle size={32} fill="currentColor" />
+                  <div className="w-16 h-16 bg-[#07C160] rounded-[20px] flex items-center justify-center text-white shadow-lg">
+                    <MessageCircle size={30} fill="currentColor" />
                   </div>
-                  <span className="text-sm font-bold text-on-surface">微信好友</span>
+                  <span className="text-xs font-bold text-on-surface">微信好友</span>
                 </button>
 
-                <button 
+                <button
                   onClick={handleWeChatClick}
-                  className="flex flex-col items-center gap-3 squishy-active"
+                  className="flex flex-col items-center gap-2.5 squishy-active"
                 >
-                  <div className="w-16 h-16 bg-[#07C160] rounded-2xl flex items-center justify-center text-white shadow-lg">
-                    <div className="grid grid-cols-2 gap-0.5 p-3">
+                  <div className="w-16 h-16 bg-[#07C160] rounded-[20px] flex items-center justify-center text-white shadow-lg">
+                    <div className="grid grid-cols-2 gap-0.5 p-3.5">
                       <div className="w-full h-full border-2 border-white rounded-sm" />
                       <div className="w-full h-full border-2 border-white rounded-sm" />
                       <div className="w-full h-full border-2 border-white rounded-sm" />
                       <div className="w-full h-full border-2 border-white rounded-sm" />
                     </div>
                   </div>
-                  <span className="text-sm font-bold text-on-surface">朋友圈</span>
+                  <span className="text-xs font-bold text-on-surface">朋友圈</span>
                 </button>
               </div>
             </motion.div>

@@ -31,7 +31,8 @@ export default function App() {
   const navigateTo = (page: PageId, product?: Product) => {
     setCurrentPage(page);
     if (product) setSelectedProduct(product);
-    window.scrollTo(0, 0);
+    const main = document.getElementById('main-scroll');
+    if (main) main.scrollTop = 0;
   };
 
   const renderPage = () => {
@@ -61,7 +62,7 @@ export default function App() {
         return <Coupons onBack={() => navigateTo('profile')} />;
       case 'product_detail':
         return selectedProduct ? (
-          <ProductDetail product={selectedProduct} onBack={() => navigateTo('home')} />
+          <ProductDetail product={selectedProduct} onBack={() => navigateTo('home')} onOrderCreated={() => navigateTo('orders')} />
         ) : (
           <Home onProductClick={(p) => navigateTo('product_detail', p)} onInvite={() => setIsShareOpen(true)} />
         );
@@ -77,7 +78,7 @@ export default function App() {
 
   if (isAdminPanel) {
     return (
-      <div className="min-h-screen flex flex-col font-sans">
+      <div className="h-full flex flex-col font-sans">
         {renderPage()}
         <ShareDrawer isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
       </div>
@@ -85,13 +86,13 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="h-full flex flex-col font-sans overflow-hidden">
       <Header currentPage={currentPage} onBack={() => {
         if (currentPage === 'product_detail') navigateTo('home');
         else navigateTo('profile');
-      }} />
-      
-      <main className="flex-1 pb-24">
+      }} onSearch={() => navigateTo('home')} />
+
+      <main className="flex-1 overflow-y-auto pb-32" id="main-scroll">
         {renderPage()}
       </main>
 

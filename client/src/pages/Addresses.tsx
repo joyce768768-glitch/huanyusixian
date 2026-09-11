@@ -96,7 +96,7 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
   return (
     <div className="px-4 py-8 pb-32 max-w-lg mx-auto">
       {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] bg-on-surface/90 text-surface px-5 py-2.5 rounded-full text-sm font-bold shadow-xl backdrop-blur-sm">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] glass-dark text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl animate-pop">
           {toast}
         </div>
       )}
@@ -104,11 +104,11 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
       {/* Editor Modal */}
       {showEditor && (
         <div className="fixed inset-0 bg-black/60 z-[100] backdrop-blur-sm flex items-end sm:items-center justify-center" onClick={() => setShowEditor(false)}>
-          <div className="bg-surface-container-lowest w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface-container-lowest w-full max-w-md rounded-t-[28px] sm:rounded-[28px] p-6 shadow-2xl max-h-[90vh] overflow-y-auto animate-fade-up" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-black text-on-surface">{editing ? '编辑地址' : '添加新地址'}</h3>
-              <button onClick={() => setShowEditor(false)} className="p-1 text-on-surface-variant">
-                <X size={20} />
+              <h3 className="font-serif text-lg font-black text-on-surface">{editing ? '编辑地址' : '添加新地址'}</h3>
+              <button onClick={() => setShowEditor(false)} className="p-1.5 text-on-surface-variant bg-surface-container rounded-full">
+                <X size={18} />
               </button>
             </div>
             <div className="space-y-4">
@@ -118,7 +118,7 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
                   value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
                   placeholder="请输入姓名"
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/30 text-sm outline-none focus:border-primary"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/40 text-sm outline-none focus:border-primary"
                 />
               </div>
               <div>
@@ -127,7 +127,7 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
                   value={form.phone}
                   onChange={e => setForm({ ...form, phone: e.target.value })}
                   placeholder="请输入手机号"
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/30 text-sm outline-none focus:border-primary"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/40 text-sm outline-none focus:border-primary"
                 />
               </div>
               <div>
@@ -136,7 +136,7 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
                   value={form.area}
                   onChange={e => setForm({ ...form, area: e.target.value })}
                   placeholder="例如：上海市 徐汇区"
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/30 text-sm outline-none focus:border-primary"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/40 text-sm outline-none focus:border-primary"
                 />
               </div>
               <div>
@@ -146,13 +146,13 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
                   onChange={e => setForm({ ...form, detail: e.target.value })}
                   placeholder="街道、门牌号等"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/30 text-sm outline-none focus:border-primary resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/40 text-sm outline-none focus:border-primary resize-none"
                 />
               </div>
               <label className="flex items-center gap-3 cursor-pointer">
                 <div
-                  className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
-                    form.isDefault ? 'bg-primary border-primary' : 'border-outline-variant'
+                  className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${
+                    form.isDefault ? 'bg-brand-gradient border-transparent' : 'border-outline-variant'
                   }`}
                   onClick={() => setForm({ ...form, isDefault: !form.isDefault })}
                 >
@@ -162,13 +162,13 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
               </label>
             </div>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => setShowEditor(false)} className="flex-1 py-3 rounded-full bg-surface-container text-on-surface font-bold text-sm">
+              <button onClick={() => setShowEditor(false)} className="flex-1 py-3 rounded-full bg-surface-container text-on-surface font-bold text-sm active:scale-95 transition-transform">
                 取消
               </button>
               <button
                 onClick={handleSave}
                 disabled={actionLoading === 'save'}
-                className="flex-1 py-3 rounded-full bg-primary text-on-primary font-bold text-sm shadow-md disabled:opacity-60 flex items-center justify-center gap-2"
+                className="btn-primary flex-1 py-3 rounded-full text-sm disabled:opacity-60"
               >
                 {actionLoading === 'save' && <Loader2 size={16} className="animate-spin" />}
                 保存
@@ -184,48 +184,48 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
           <p className="mt-3 text-sm text-on-surface-variant">加载地址中...</p>
         </div>
       ) : addresses.length === 0 ? (
-        <div className="py-24 border-2 border-dashed border-outline-variant rounded-3xl flex flex-col items-center justify-center text-center">
+        <div className="py-20 border-2 border-dashed border-outline-variant/50 rounded-3xl flex flex-col items-center justify-center text-center">
           <div className="bg-surface-container p-5 rounded-full mb-5">
             <Mail className="text-outline" size={40} />
           </div>
-          <h3 className="text-base font-bold text-on-surface mb-2">还没有收货地址</h3>
+          <h3 className="font-serif text-base font-black text-on-surface mb-2">还没有收货地址</h3>
           <p className="text-xs text-on-surface-variant mb-6">添加一个收货地址，方便购买绘本~</p>
-          <button onClick={openAdd} className="bg-primary text-on-primary px-8 py-3 rounded-full text-sm font-bold shadow-md">
+          <button onClick={openAdd} className="btn-primary px-8 py-3 rounded-full text-sm">
             添加地址
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4">
           {addresses.map((address) => (
             <div
               key={address.id}
-              className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 shadow-sm hover:scale-[1.01] transition-all group relative"
+              className="card rounded-2xl p-5 relative"
             >
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg font-bold text-on-surface">{address.name}</span>
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="font-serif text-base font-black text-on-surface">{address.name}</span>
                   {address.isDefault && (
-                    <span className="bg-secondary-container text-on-secondary-container text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest border border-secondary/10">
+                    <span className="bg-primary-fixed/60 text-primary text-[9px] px-2 py-0.5 rounded-full font-black">
                       默认
                     </span>
                   )}
                 </div>
                 <div className="flex gap-1">
-                  <button onClick={() => openEdit(address)} className="text-on-surface-variant hover:text-primary transition-colors p-1.5">
+                  <button onClick={() => openEdit(address)} className="text-on-surface-variant active:text-primary transition-colors p-1.5">
                     <Edit3 size={16} />
                   </button>
                   <button
                     onClick={() => handleDelete(address.id)}
                     disabled={actionLoading === address.id}
-                    className="text-on-surface-variant hover:text-error transition-colors p-1.5 disabled:opacity-40"
+                    className="text-on-surface-variant active:text-error transition-colors p-1.5 disabled:opacity-40"
                   >
                     {actionLoading === address.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
                   </button>
                 </div>
               </div>
 
-              <p className="text-sm font-medium text-on-surface-variant mb-2">{address.phone}</p>
-              <p className="text-sm text-on-surface leading-relaxed pr-8">
+              <p className="text-sm font-medium text-on-surface-variant mb-1.5">{address.phone}</p>
+              <p className="text-sm text-on-surface leading-relaxed pr-6">
                 {address.area && <span className="text-on-surface-variant mr-1">{address.area}</span>}
                 {address.detail || address.address}
               </p>
@@ -234,7 +234,7 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
                 <button
                   onClick={() => handleSetDefault(address.id)}
                   disabled={actionLoading === address.id + ':def'}
-                  className="mt-5 text-xs font-bold text-primary hover:underline disabled:opacity-50"
+                  className="mt-4 text-xs font-bold text-primary active:opacity-70 disabled:opacity-50"
                 >
                   设为默认地址
                 </button>
@@ -245,13 +245,12 @@ export default function Addresses({ onBack }: { onBack: () => void }) {
       )}
 
       {/* Floating Add Button */}
-      <div className="fixed bottom-24 left-0 right-0 px-4 z-40 flex justify-center">
+      <div className="fixed bottom-8 left-0 right-0 mx-auto w-full max-w-[430px] px-4 z-40 flex justify-center">
         <button
           onClick={openAdd}
-          className="bg-secondary-container text-on-secondary-container rounded-full px-12 py-4 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 border border-secondary/20"
-          style={{ backgroundColor: '#D4E96D' }}
+          className="btn-primary rounded-full px-12 py-4 shadow-glow active:scale-95 transition-transform flex items-center gap-2"
         >
-          <Plus size={24} />
+          <Plus size={20} />
           <span className="text-sm font-black">添加新地址</span>
         </button>
       </div>

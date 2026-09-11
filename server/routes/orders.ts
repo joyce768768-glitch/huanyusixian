@@ -1,5 +1,53 @@
 import express from 'express';
-import { orders, products, MY_PARTNERS_USER_ID } from '../data/mockData';
+import { orders, products, MY_PARTNERS_USER_ID, userCoupons, distributors, financeRecords, walletTransactions } from '../data/mockData';
+
+// 计算优惠券抵扣金额
+function applyCoupon(totalAmount: number, couponId?: string): { discount: number; coupon: any } {
+  if (!couponId) return { discount: 0, coupon: null };
+  const coupon = userCoupons.find((c: any) => c.id === couponId && c.status === 'unused' && (!c.userId || c.userId === MY_PARTNERS_USER_ID));
+  if (!coupon) return { discount: 0, coupon: null };
+  if (coupon.minSpend && totalAmount < coupon.minSpend) return { discount: 0, coupon: null };
+  let discount = 0;
+  if (coupon.discountType === 'amount') {
+    discount = coupon.amount || 0;
+  } else if (coupon.discountType === 'shipping') {
+    discount = 15; // 免运费，固定抵扣 15 元
+  }
+  return { discount: Math.min(discount, totalAmount), coupon };
+}
+
+// 支付成功后结算佣金给上级分销商
+function settleCommission(orderId: string, totalAmount: number) {
+  const order = orders.find(o => o.id === orderId);
+  if (!order) return;
+  const distId = (order as any).distId;
+  if (!distId) return;
+  const dist = distributors.find(d => d.id === distId);
+  if (!dist) return;
+  const rateStr = dist.rate || '10%';
+  const rate = parseFloat(rateStr) / 100;
+  if (!rate || rate <= 0) return;
+  const commission = Math.round(totalAmount * rate * 100) / 100;
+  (dist as any).revenue = (dist.revenue || 0) + commission;
+  (dist as any).orders = (dist.orders || 0) + 1;
+  financeRecords.unshift({
+    id: `FIN-${Date.now()}`,
+    type: '分销佣金',
+    category: 'income',
+    amount: commission,
+    time: new Date().toISOString().slice(0, 10),
+    description: `订单 ${orderId} 佣金结算（${dist.name} ${rateStr}）`,
+  });
+  walletTransactions.unshift({
+    id: `WT-${Date.now()}`,
+    type: 'income',
+    amount: commission,
+    time: new Date().toISOString().replace('T', ' ').slice(0, 16),
+    description: `分销佣金 - 订单 ${orderId}`,
+    status: 'completed',
+    userId: MY_PARTNERS_USER_ID,
+  } as any);
+}
 
 const STATUS_MAP: Record<string, { label: string; color: string; log: string }> = {
   pending_payment:   { label: '待付款', color: 'blue',   log: 'pay' },
@@ -102,7 +150,7 @@ router.put('/:id/status', (req, res) => {
 
 // 下单（直接从 items 建订单，或从购物车 checkout 建单走 cart/checkout）
 router.post('/', (req, res) => {
-  const { items, remark } = req.body;
+  const { items, remark, couponId } = req.body;
   if (!items || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ success: false, message: '商品不能为空' });
   }
@@ -118,8 +166,11 @@ router.post('/', (req, res) => {
       image: p?.image || '',
     };
   });
-  const totalAmount = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
+  const subtotal = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
   const totalQty = orderItems.reduce((s, i) => s + i.quantity, 0);
+  // 优惠券抵扣
+  const { discount, coupon } = applyCoupon(subtotal, couponId);
+  const totalAmount = Math.max(0, subtotal - discount);
   const id = `ORD-${Date.now()}`;
   const now = new Date().toISOString().replace('T', ' ').slice(0, 16);
   const newOrder = {
@@ -141,7 +192,12 @@ router.post('/', (req, res) => {
     log: 'pay',
     remark: remark || '',
     items: orderItems,
+    couponId: couponId || '',
+    discount,
+    originalAmount: subtotal,
   };
+  // 标记优惠券已使用
+  if (coupon) (coupon as any).status = 'used';
   orders.unshift(newOrder as any);
   res.json({ success: true, data: normalize(newOrder as any) });
 });
@@ -154,6 +210,9 @@ router.post('/:id/pay', (req, res) => {
   (orders[idx] as any).statusCode = 'pending_delivery';
   (orders[idx] as any).color = 'amber';
   (orders[idx] as any).log = 'box';
+  // 支付成功后结算佣金
+  const paidAmount = (orders[idx] as any).totalAmount || 0;
+  settleCommission(orders[idx].id, paidAmount);
   res.json({ success: true, data: normalize(orders[idx]) });
 });
 

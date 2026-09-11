@@ -64,20 +64,20 @@ export default function Membership({ onBack }: { onBack: () => void }) {
   return (
     <div className="px-4 py-6 max-w-lg mx-auto">
       {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] bg-on-surface/90 text-surface px-5 py-2.5 rounded-full text-sm font-bold shadow-xl backdrop-blur-sm">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] glass-dark text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl animate-pop">
           {toast}
         </div>
       )}
 
       {/* Vip Selection Tabs */}
-      <div className="flex justify-between items-center bg-surface-container-low p-2 rounded-2xl mb-8 border border-outline-variant/30">
+      <div className="flex justify-between items-center glass p-1.5 rounded-2xl mb-7 border border-white/50 shadow-sm">
         {vips.map((vip, index) => (
           <button
             key={vip.level}
-            className={`flex-1 py-3 rounded-xl text-xs font-black transition-all ${
+            className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all active:scale-95 ${
               activeTab === index
-                ? `${vip.color} ${vip.textColor} shadow-lg scale-105`
-                : 'text-on-surface-variant opacity-50 hover:opacity-100'
+                ? 'bg-brand-gradient text-white shadow-glow scale-105'
+                : 'text-on-surface-variant opacity-60'
             }`}
           >
             {vip.level.replace(' ', '')}
@@ -93,39 +93,41 @@ export default function Membership({ onBack }: { onBack: () => void }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className={`relative overflow-hidden rounded-[2.5rem] p-8 min-h-[220px] ${vips[activeTab].color} ${vips[activeTab].textColor} ${vips[activeTab].shadow} shadow-2xl mb-10`}
+          className="relative overflow-hidden rounded-[28px] p-7 min-h-[210px] mb-8 shadow-xl"
+          style={{ background: 'linear-gradient(135deg, #6b4d12 0%, #a67c22 45%, #e3c779 100%)', color: '#2a1c05' }}
         >
           {/* Decorative Pattern */}
-          <div className="absolute top-0 right-0 w-48 h-48 opacity-10 -mr-12 -mt-12 pointer-events-none">
+          <div className="absolute top-0 right-0 w-48 h-48 opacity-20 -mr-12 -mt-12 pointer-events-none text-white">
             <Crown size={192} strokeWidth={1} />
           </div>
+          <div className="absolute -bottom-10 -left-8 w-32 h-32 rounded-full bg-white/20 blur-xl" />
 
           <div className="relative z-10 h-full flex flex-col justify-between">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Membership Card</span>
-                <h2 className="text-3xl font-black italic tracking-tighter mt-1">{vips[activeTab].level.replace(' ', '')} Member</h2>
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] opacity-70">Membership</span>
+                <h2 className="font-serif text-3xl font-black tracking-tight mt-1 text-white">{vips[activeTab].level.replace(' ', '')} <span className="text-lg">会员</span></h2>
               </div>
-              <div className="bg-white/20 p-2 rounded-full backdrop-blur-md">
+              <div className="bg-white/25 p-2.5 rounded-2xl backdrop-blur-md text-white">
                 <Crown size={24} />
               </div>
             </div>
 
-            <div className="mt-12 flex justify-between items-end">
+            <div className="mt-10 flex justify-between items-end">
               <div>
                 {loading ? (
                   <div className="space-y-1.5">
-                    <div className="h-3 w-32 bg-white/20 rounded animate-pulse" />
-                    <div className="h-4 w-20 bg-white/20 rounded animate-pulse" />
+                    <div className="h-3 w-32 bg-white/30 rounded animate-pulse" />
+                    <div className="h-4 w-20 bg-white/30 rounded animate-pulse" />
                   </div>
                 ) : (
                   <>
-                    <p className="text-[10px] font-bold opacity-60">ID: Reader_{member?.id || '2024_001'}</p>
-                    <p className="text-sm font-black mt-1">{member?.name || '悦读者'}</p>
+                    <p className="text-[10px] font-bold opacity-70 text-white">NO. Reader_{member?.id || '2024_001'}</p>
+                    <p className="text-base font-black mt-1 text-white">{member?.name || '悦读者'}</p>
                   </>
                 )}
               </div>
-              <div className="flex items-center gap-1 bg-black/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
+              <div className="flex items-center gap-1 bg-black/15 text-white px-3 py-1.5 rounded-full backdrop-blur-sm">
                 <span className="text-[10px] font-black">尊享特权中</span>
               </div>
             </div>
@@ -134,16 +136,16 @@ export default function Membership({ onBack }: { onBack: () => void }) {
       </AnimatePresence>
 
       {/* Membership Summary */}
-      <section className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 mb-8 flex justify-between items-center shadow-sm">
+      <section className="card-elevated p-5 mb-7 flex justify-between items-center">
         <div>
-          <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">累计消费</p>
+          <p className="text-[10px] text-on-surface-variant font-bold">累计消费</p>
           <p className="text-2xl font-black text-primary mt-1">
             ¥{loading ? '--' : (member?.totalAmount || 0).toLocaleString()}
           </p>
         </div>
-        <div className="h-12 w-px bg-outline-variant/30" />
+        <div className="h-12 w-px bg-outline-variant/50" />
         <div>
-          <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">注册时间</p>
+          <p className="text-[10px] text-on-surface-variant font-bold">注册时间</p>
           <p className="text-sm font-bold text-on-surface mt-1">
             {loading ? '--' : (member?.registerDate || '2023-06-25')}
           </p>
@@ -151,26 +153,26 @@ export default function Membership({ onBack }: { onBack: () => void }) {
       </section>
 
       {/* Benefits List */}
-      <section className="space-y-4">
-        <h3 className="text-base font-black text-on-surface mb-6">等级专属权益</h3>
-        <div className="grid grid-cols-1 gap-4">
-          {benefits.map((benefit, idx) => {
+      <section className="space-y-3">
+        <h3 className="font-serif text-base font-black text-on-surface mb-1">等级专属权益</h3>
+        <div className="grid grid-cols-1 gap-3">
+          {benefits.map((benefit) => {
             const Icon = benefit.icon;
             const isUnlocked = activeTab + 1 >= benefit.level;
             return (
               <div
                 key={benefit.title}
-                className={`bg-surface-container-lowest border rounded-2xl p-5 flex items-center justify-between shadow-sm transition-all ${
-                  isUnlocked ? 'border-outline-variant opacity-100' : 'border-dashed border-outline opacity-40'
+                className={`card p-4 flex items-center justify-between transition-all ${
+                  isUnlocked ? '' : 'opacity-50 border-dashed'
                 }`}
               >
-                <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-xl ${isUnlocked ? 'bg-primary/10 text-primary' : 'bg-surface-container text-outline'}`}>
-                    <Icon size={24} />
+                <div className="flex items-center gap-3.5">
+                  <div className={`p-2.5 rounded-xl ${isUnlocked ? 'bg-primary-fixed/50 text-primary' : 'bg-surface-container text-outline'}`}>
+                    <Icon size={20} />
                   </div>
                   <div>
                     <h4 className="text-sm font-black text-on-surface">{benefit.title}</h4>
-                    <p className="text-[10px] font-medium text-on-surface-variant opacity-70">{benefit.desc}</p>
+                    <p className="text-[11px] font-medium text-on-surface-variant">{benefit.desc}</p>
                   </div>
                 </div>
                 {!isUnlocked && (
@@ -186,11 +188,11 @@ export default function Membership({ onBack }: { onBack: () => void }) {
       </section>
 
       {/* Upgrade CTA */}
-      <section className="mt-12 bg-secondary-container p-6 rounded-[2rem] border border-secondary/20 shadow-lg text-center">
-        <h4 className="text-sm font-black text-on-secondary-fixed">
+      <section className="mt-8 card-elevated p-6 text-center">
+        <h4 className="font-serif text-base font-black text-on-surface">
           {activeTab >= vips.length - 1 ? '已是最高等级会员' : '升级至下一等级'}
         </h4>
-        <p className="text-[10px] text-on-secondary-fixed-variant mt-2 mb-6">
+        <p className="text-[11px] text-on-surface-variant mt-2 mb-5">
           {activeTab >= vips.length - 1
             ? '感谢您的支持，享受更多专属权益吧'
             : `再完成 ${Math.max(1, (activeTab + 2) * 2 - 1)} 笔订单或续费会员，即可升级至 ${vips[activeTab + 1]?.level}`}
@@ -198,7 +200,7 @@ export default function Membership({ onBack }: { onBack: () => void }) {
         <button
           onClick={handleJoinRenew}
           disabled={joining}
-          className="w-full bg-secondary text-on-secondary py-4 rounded-full font-black text-sm shadow-md squishy-active disabled:opacity-60 flex items-center justify-center gap-2"
+          className="w-full btn-primary py-4 text-sm disabled:opacity-60"
         >
           {joining && <Loader2 size={16} className="animate-spin" />}
           {joining ? '提交中...' : (activeTab >= vips.length - 1 ? '续费会员' : '立即升级会员')}

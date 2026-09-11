@@ -53,9 +53,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`   B端 Admin:     http://localhost:3000/  (Vite --mode admin)`);
-  console.log(`   C端 Client:    http://localhost:3002/  (Vite --mode client)`);
-  console.log(`   API 健康检查:  http://localhost:${PORT}/api/health`);
-});
+// 仅当直接运行本文件时才启动监听（测试中通过 supertest 导入 app，不需要监听端口）
+if (process.argv[1] && process.argv[1].includes('server/index')) {
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
+    console.log(`   B端 Admin:     http://localhost:3000/  (Vite --mode admin)`);
+    console.log(`   C端 Client:    http://localhost:3002/  (Vite --mode client)`);
+    console.log(`   API 健康检查:  http://localhost:${PORT}/api/health`);
+  });
+}
+
+export default app;

@@ -117,6 +117,8 @@ export const productAPI = {
     request('/products', { method: 'POST', body: JSON.stringify(data) }),
   updateProduct: (id: string, data: Partial<Product>): Promise<APIResult<Product>> =>
     request(`/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  toggleProductStatus: (id: string, status: 'online' | 'offline'): Promise<APIResult<Product>> =>
+    request(`/products/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
   deleteProduct: (id: string): Promise<APIResult<void>> =>
     request(`/products/${id}`, { method: 'DELETE' }),
 };
@@ -200,6 +202,9 @@ export const distributorAPI = {
     const query = new URLSearchParams(params as any).toString();
     return request(`/distributors/my-partners?${query}`);
   },
+  // C 端：获取我的邀请码
+  getMyInviteCode: (): Promise<APIResult<{ inviteCode: string; inviter: string }>> =>
+    request('/distributors/my-invite-code'),
   // C 端：申请成为分销商
   apply: (data: { name: string; phone: string; wechat?: string; inviterCode?: string }): Promise<APIResult<Distributor>> =>
     request('/distributors/apply', { method: 'POST', body: JSON.stringify(data) }),

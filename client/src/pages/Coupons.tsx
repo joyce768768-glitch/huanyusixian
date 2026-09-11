@@ -82,23 +82,23 @@ export default function Coupons({ onBack }: { onBack: () => void }) {
   return (
     <div className="px-4 py-8 max-w-lg mx-auto">
       {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] bg-on-surface/90 text-surface px-5 py-2.5 rounded-full text-sm font-bold shadow-xl backdrop-blur-sm">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] glass-dark text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl animate-pop">
           {toast}
         </div>
       )}
 
       {/* Stats Header */}
-      <section className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-primary-container text-on-primary-container p-4 rounded-2xl text-center">
-          <p className="text-2xl font-black">{activeCoupons.length}</p>
-          <p className="text-[10px] font-bold opacity-80">可使用</p>
+      <section className="grid grid-cols-3 gap-3 mb-7">
+        <div className="bg-brand-gradient text-white p-4 rounded-2xl text-center shadow-glow">
+          <p className="font-serif text-2xl font-black">{activeCoupons.length}</p>
+          <p className="text-[10px] font-bold opacity-90">可使用</p>
         </div>
-        <div className="bg-surface-container-high p-4 rounded-2xl text-center">
-          <p className="text-2xl font-black text-on-surface">{usedCoupons.length}</p>
+        <div className="card p-4 rounded-2xl text-center">
+          <p className="font-serif text-2xl font-black text-on-surface">{usedCoupons.length}</p>
           <p className="text-[10px] font-bold text-on-surface-variant">已使用</p>
         </div>
-        <div className="bg-surface-container-high p-4 rounded-2xl text-center">
-          <p className="text-2xl font-black text-on-surface">{expiredCoupons.length}</p>
+        <div className="card p-4 rounded-2xl text-center">
+          <p className="font-serif text-2xl font-black text-on-surface">{expiredCoupons.length}</p>
           <p className="text-[10px] font-bold text-on-surface-variant">已过期</p>
         </div>
       </section>
@@ -108,7 +108,7 @@ export default function Coupons({ onBack }: { onBack: () => void }) {
         <button
           onClick={claimGift}
           disabled={claiming}
-          className="w-full mb-8 bg-gradient-to-r from-amber-400 to-rose-400 text-white p-5 rounded-2xl shadow-lg flex items-center justify-between disabled:opacity-60"
+          className="w-full mb-7 bg-gold-gradient text-on-gold p-5 rounded-2xl shadow-glow flex items-center justify-between disabled:opacity-60 active:scale-[0.98] transition-transform"
         >
           <div className="flex items-center gap-3">
             <Gift size={24} />
@@ -131,20 +131,20 @@ export default function Coupons({ onBack }: { onBack: () => void }) {
           {/* Available Coupons */}
           {activeCoupons.length > 0 && (
             <section className="mb-8">
-              <h3 className="text-sm font-bold text-on-surface mb-4 flex items-center gap-2">
-                <Ticket className="text-primary" size={16} />
+              <h3 className="font-serif text-base font-black text-on-surface mb-4 flex items-center gap-2">
+                <Ticket className="text-primary" size={17} />
                 可使用（{activeCoupons.length}）
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {activeCoupons.map((coupon) => {
                   const isShipping = coupon.discountType === 'shipping';
                   return (
                     <div
                       key={coupon.id}
-                      className={`rounded-2xl p-4 flex items-center gap-4 shadow-sm border ${
+                      className={`rounded-2xl p-4 flex items-center gap-4 shadow-md ${
                         isShipping
-                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-emerald-500/20'
-                          : 'bg-gradient-to-r from-primary to-primary-container text-white border-primary/20'
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white'
+                          : 'bg-brand-gradient text-white shadow-glow'
                       }`}
                     >
                       <div className="text-center w-24 flex-shrink-0">
@@ -185,15 +185,15 @@ export default function Coupons({ onBack }: { onBack: () => void }) {
           {/* Used Coupons */}
           {usedCoupons.length > 0 && (
             <section className="mb-8">
-              <h3 className="text-sm font-bold text-on-surface mb-4 flex items-center gap-2">
-                <Tag className="text-on-surface-variant" size={16} />
+              <h3 className="font-serif text-base font-black text-on-surface mb-4 flex items-center gap-2">
+                <Tag className="text-on-surface-variant" size={17} />
                 已使用（{usedCoupons.length}）
               </h3>
               <div className="space-y-4">
                 {usedCoupons.map((coupon) => (
                   <div
                     key={coupon.id}
-                    className="bg-surface-container-low rounded-2xl p-4 flex items-center gap-4 opacity-60"
+                    className="card rounded-2xl p-4 flex items-center gap-4 opacity-60"
                   >
                     <div className="text-center w-24 flex-shrink-0">
                       <div className="flex items-baseline justify-center text-on-surface">
@@ -217,15 +217,15 @@ export default function Coupons({ onBack }: { onBack: () => void }) {
           {/* Expired Coupons */}
           {expiredCoupons.length > 0 && (
             <section className="mb-12">
-              <h3 className="text-sm font-bold text-on-surface mb-4 flex items-center gap-2">
-                <Percent className="text-error" size={16} />
+              <h3 className="font-serif text-base font-black text-on-surface mb-4 flex items-center gap-2">
+                <Percent className="text-error" size={17} />
                 已过期（{expiredCoupons.length}）
               </h3>
               <div className="space-y-4">
                 {expiredCoupons.map((coupon) => (
                   <div
                     key={coupon.id}
-                    className="bg-surface-container-low rounded-2xl p-4 flex items-center gap-4 opacity-40"
+                    className="card rounded-2xl p-4 flex items-center gap-4 opacity-40"
                   >
                     <div className="text-center w-24 flex-shrink-0">
                       <div className="flex items-baseline justify-center text-on-surface">
@@ -254,12 +254,12 @@ export default function Coupons({ onBack }: { onBack: () => void }) {
           <div className="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center mb-4">
             <Gift className="text-on-surface-variant" size={32} />
           </div>
-          <h3 className="text-base font-bold text-on-surface mb-2">暂无优惠券</h3>
+          <h3 className="font-serif text-base font-black text-on-surface mb-2">暂无优惠券</h3>
           <p className="text-sm text-on-surface-variant text-center px-8 mb-6">快去参与活动领取优惠券，享受更多优惠吧！</p>
           <button
             onClick={claimGift}
             disabled={claiming}
-            className="bg-primary text-on-primary px-8 py-3 rounded-full text-sm font-bold shadow-md disabled:opacity-60 flex items-center gap-2"
+            className="btn-primary px-8 py-3 rounded-full text-sm disabled:opacity-60 flex items-center gap-2"
           >
             {claiming && <Loader2 size={16} className="animate-spin" />}
             领取新人礼包

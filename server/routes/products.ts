@@ -1,5 +1,5 @@
 import express from 'express';
-import { products } from '../data/mockData';
+import { products, DEFAULT_COVER } from '../data/mockData';
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const { category, keyword, tag, page = 1, pageSize = 20 } = req.query;
 
-  let filtered = [...products];
+  let filtered = products.filter(p => (p as any).status !== 'offline');
 
   if (category && category !== 'all') {
     filtered = filtered.filter(p => p.category === category);
@@ -73,11 +73,23 @@ router.post('/', (req, res) => {
     stock: stock !== undefined ? Number(stock) : 0,
     sold: 0,
     status: 'online' as const,
-    image: image || '',
+    image: image || DEFAULT_COVER,
     tag: tag || '',
   };
   products.push(newProduct as any);
   res.json({ success: true, data: newProduct });
+});
+
+// 商品上下架（快捷接口）
+router.put('/:id/status', (req, res) => {
+  const idx = products.findIndex(p => p.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ success: false, message: '商品不存在' });
+  const { status } = req.body;
+  if (!['online', 'offline'].includes(status)) {
+    return res.status(400).json({ success: false, message: 'status 必须为 online 或 offline' });
+  }
+  (products[idx] as any).status = status;
+  res.json({ success: true, data: products[idx] });
 });
 
 // 更新商品
@@ -86,8 +98,10 @@ router.put('/:id', (req, res) => {
   if (idx === -1) return res.status(404).json({ success: false, message: '商品不存在' });
   const fields = ['name', 'title', 'description', 'category', 'price', 'originalPrice', 'stock', 'status', 'image', 'tag'] as const;
   fields.forEach(f => {
-    const v = req.body[f];
+    let v = req.body[f];
     if (v !== undefined) {
+      // 图片不允许被置为空串，兜底为默认封面，避免前端 <img src="">
+      if (f === 'image' && (v === '' || v === null)) v = DEFAULT_COVER;
       (products[idx] as any)[f] = f === 'price' || f === 'originalPrice' || f === 'stock' ? Number(v) : v;
     }
   });

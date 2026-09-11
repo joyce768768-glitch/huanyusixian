@@ -3,6 +3,29 @@
 // 注意：所有数据结构对齐 shared/types/index.ts
 // ================================================================
 
+// ---------------- 日期辅助 ----------------
+// 让券/活动等时效数据相对"今天"动态生成，避免 mock 一上线就显示为已过期
+const fmtDate = (d: Date) => d.toISOString().slice(0, 10);
+const daysFromNow = (n: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return fmtDate(d);
+};
+
+// 缺图占位封面（内联 SVG，无外部依赖），避免新建商品未传图时前端出现 <img src="">
+export const DEFAULT_COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">` +
+      `<rect width="400" height="400" fill="#f3ede6"/>` +
+      `<rect x="120" y="100" width="160" height="200" rx="12" fill="#d9c7b8"/>` +
+      `<rect x="120" y="100" width="26" height="200" rx="12" fill="#b89f8a"/>` +
+      `<line x1="172" y1="150" x2="252" y2="150" stroke="#8a7565" stroke-width="8" stroke-linecap="round"/>` +
+      `<line x1="172" y1="192" x2="252" y2="192" stroke="#8a7565" stroke-width="8" stroke-linecap="round"/>` +
+      `<line x1="172" y1="234" x2="224" y2="234" stroke="#8a7565" stroke-width="8" stroke-linecap="round"/>` +
+      `</svg>`
+  );
+
 // ---------------- 用户 / 权限角色 ----------------
 export const users = [
   { id: 'USR-ADMIN-001', name: '管理员-艾伦', role: '平台管理员', date: '2024-01-01 10:00', wechat: 'admin_allen' },
@@ -141,6 +164,118 @@ export const products = [
     status: 'online' as const,
     image: IMG_H,
     tag: '经典童话',
+  },
+  {
+    id: 'PRD-009',
+    name: '恐龙王国大冒险 · 盲盒 C',
+    title: '恐龙王国大冒险 · 盲盒 C',
+    description: '穿越白垩纪与霸王龙同行，内含考古挖掘工具与恐龙图鉴卡片。',
+    category: '科普自然',
+    price: 118,
+    originalPrice: 148,
+    stock: 760,
+    sold: 4230,
+    status: 'online' as const,
+    image: IMG_A,
+    tag: '科普自然',
+  },
+  {
+    id: 'PRD-010',
+    name: '中国传统节日 · 礼盒装',
+    title: '中国传统节日 · 礼盒装',
+    description: '春节、端午、中秋等八大节日的由来与习俗，国潮插画大开本。',
+    category: '国学启蒙',
+    price: 138,
+    originalPrice: 168,
+    stock: 540,
+    sold: 3120,
+    status: 'online' as const,
+    image: IMG_F,
+    tag: '国学启蒙',
+  },
+  {
+    id: 'PRD-011',
+    name: '神奇校车 · 科学探索套装',
+    title: '神奇校车 · 科学探索套装',
+    description: '跟着卷毛老师上天下海，10 册科学主题绘本，附实验材料包。',
+    category: '科普自然',
+    price: 158,
+    originalPrice: 198,
+    stock: 420,
+    sold: 5680,
+    status: 'online' as const,
+    image: IMG_E,
+    tag: '科普自然',
+  },
+  {
+    id: 'PRD-012',
+    name: '格林童话全集 · 注音版',
+    title: '格林童话全集 · 注音版',
+    description: '白雪公主、灰姑娘等 30 篇经典，全文注音，适合 5-8 岁自主阅读。',
+    category: '经典童话',
+    price: 82,
+    originalPrice: 108,
+    stock: 1280,
+    sold: 7240,
+    status: 'online' as const,
+    image: IMG_C,
+    tag: '经典童话',
+  },
+  {
+    id: 'PRD-013',
+    name: '情绪小怪兽 · 情绪管理绘本',
+    title: '情绪小怪兽 · 情绪管理绘本',
+    description: '帮孩子认识喜怒哀乐，学会表达与管理情绪，亲子共读首选。',
+    category: '文学启蒙',
+    price: 69,
+    originalPrice: 89,
+    stock: 960,
+    sold: 4510,
+    status: 'online' as const,
+    image: IMG_B,
+    tag: '文学启蒙',
+  },
+  {
+    id: 'PRD-014',
+    name: '唐诗三百首 · 幼儿绘本版',
+    title: '唐诗三百首 · 幼儿绘本版',
+    description: '精选 60 首必背唐诗，每首配意境水墨画，扫码可听名家朗诵。',
+    category: '国学启蒙',
+    price: 96,
+    originalPrice: 128,
+    stock: 1480,
+    sold: 5920,
+    status: 'online' as const,
+    image: IMG_F,
+    tag: '国学启蒙',
+  },
+  {
+    id: 'PRD-015',
+    name: '太空漫游 · 宇宙百科盲盒',
+    title: '太空漫游 · 宇宙百科盲盒',
+    description: '太阳系八大行星立体机关书，含夜光星座贴纸与宇航员人偶。',
+    category: '纸艺魔法',
+    price: 148,
+    originalPrice: 188,
+    stock: 380,
+    sold: 2340,
+    status: 'online' as const,
+    image: IMG_A,
+    tag: '纸艺魔法',
+  },
+  {
+    id: 'PRD-016',
+    name: '猜猜我有多爱你 · 亲情绘本',
+    title: '猜猜我有多爱你 · 亲情绘本',
+    description: '全球畅销亲情绘本，温暖治愈，附赠亲子互动手偶一对。',
+    category: '文学启蒙',
+    price: 59,
+    originalPrice: 79,
+    stock: 2100,
+    sold: 9870,
+    status: 'online' as const,
+    image: IMG_D,
+    tag: '文学启蒙',
   },
 ];
 
@@ -361,8 +496,8 @@ export const permissions = [
 
 // ---------------- 营销活动 ----------------
 export const marketingActivities = [
-  { id: 'MKT-001', name: '新用户注册有礼', type: 'register', status: 'active' as const, reward: '¥20 优惠券', startDate: '2024-01-01', endDate: '2024-12-31' },
-  { id: 'MKT-002', name: '邀请好友奖励',   type: 'invite',   status: 'active' as const, reward: '¥15 优惠券', startDate: '2024-02-01', endDate: '2024-12-31' },
+  { id: 'MKT-001', name: '新用户注册有礼', type: 'register', status: 'active' as const, reward: '¥20 优惠券', startDate: daysFromNow(-60), endDate: daysFromNow(365) },
+  { id: 'MKT-002', name: '邀请好友奖励',   type: 'invite',   status: 'active' as const, reward: '¥15 优惠券', startDate: daysFromNow(-30), endDate: daysFromNow(365) },
 ];
 
 // ================================================================
@@ -378,11 +513,11 @@ export const userAddresses = [
 
 // 我的优惠券
 export const userCoupons = [
-  { id: 'CP-001', title: '满99减20新人券',     discountType: 'amount'   as const, amount: 20,  minSpend: 99,  validFrom: '2024-01-01', validTo: '2024-12-31', status: 'unused'  as const },
-  { id: 'CP-002', title: '满199减50通用券',    discountType: 'amount'   as const, amount: 50,  minSpend: 199, validFrom: '2024-01-01', validTo: '2024-06-30', status: 'unused'  as const },
-  { id: 'CP-003', title: '首单8折邀请券',      discountType: 'percent'  as const, percent: 20, minSpend: 50,  validFrom: '2024-01-01', validTo: '2024-12-31', status: 'unused'  as const },
-  { id: 'CP-004', title: '盲盒系列运费券',     discountType: 'shipping' as const, amount: 0,   minSpend: 68,  validFrom: '2024-01-01', validTo: '2024-03-31', status: 'used'    as const },
-  { id: 'CP-005', title: '首单满99减20',       discountType: 'amount'   as const, amount: 20,  minSpend: 99,  validFrom: '2023-01-01', validTo: '2023-12-31', status: 'expired' as const },
+  { id: 'CP-001', title: '满99减20新人券',     discountType: 'amount'   as const, amount: 20,  minSpend: 99,  validFrom: daysFromNow(-30), validTo: daysFromNow(90),  status: 'unused'  as const },
+  { id: 'CP-002', title: '满199减50通用券',    discountType: 'amount'   as const, amount: 50,  minSpend: 199, validFrom: daysFromNow(-30), validTo: daysFromNow(60),  status: 'unused'  as const },
+  { id: 'CP-003', title: '首单8折邀请券',      discountType: 'percent'  as const, percent: 20, minSpend: 50,  validFrom: daysFromNow(-30), validTo: daysFromNow(120), status: 'unused'  as const },
+  { id: 'CP-004', title: '盲盒系列运费券',     discountType: 'shipping' as const, amount: 0,   minSpend: 68,  validFrom: daysFromNow(-120), validTo: daysFromNow(-10), status: 'used'    as const },
+  { id: 'CP-005', title: '首单满99减20',       discountType: 'amount'   as const, amount: 20,  minSpend: 99,  validFrom: daysFromNow(-400), validTo: daysFromNow(-30), status: 'expired' as const },
 ];
 
 // 我的收藏夹

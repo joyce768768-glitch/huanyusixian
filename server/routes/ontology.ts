@@ -16,6 +16,8 @@ import { pool } from '../db/client';
 // M2 语义视图层：契约仓库编译器 codegen 产物（勿手改，重新生成命令见文件头）
 import { semanticViews as offeringViews, materialize } from '../ontology/semantic-views.offering.generated';
 import { semanticViews as orderViews } from '../ontology/semantic-views.order.generated';
+// M3 双 Agent 编排：查询规划 Agent + 校验 Agent + 带依据回答
+import { askQuestion, AskConfigError } from '../ontology/ask';
 
 const router = express.Router();
 
@@ -192,6 +194,22 @@ router.post('/views/:id/query', async (req, res) => {
     });
   } catch (e: any) {
     res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+/** 语义问答（M3）：双 Agent 编排主链路。供型为强制真 LLM——
+ *  无 key 返回 503 配置指引，不做 Mock 降级；LLM 网络失败如实上报 502。 */
+router.post('/ask', async (req, res) => {
+  const question = String(req.body?.question ?? '').trim();
+  if (!question) return res.status(400).json({ success: false, message: 'question 不能为空' });
+  try {
+    const out = await askQuestion(question);
+    return res.json({ success: true, data: out });
+  } catch (e: any) {
+    if (e instanceof AskConfigError) {
+      return res.status(503).json({ success: false, message: e.message });
+    }
+    return res.status(502).json({ success: false, message: `LLM 调用失败: ${e?.message ?? e}` });
   }
 });
 

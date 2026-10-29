@@ -18,6 +18,8 @@ import { semanticViews as offeringViews, materialize } from '../ontology/semanti
 import { semanticViews as orderViews } from '../ontology/semantic-views.order.generated';
 // M3 双 Agent 编排：查询规划 Agent + 校验 Agent + 带依据回答
 import { askQuestion, AskConfigError } from '../ontology/ask';
+// M4 Data Agent 报表编排：NL 问题 → 多节复合报表（复用 M3 链路 + 声明式异常规则）
+import { askReport } from '../ontology/report';
 
 const router = express.Router();
 
@@ -204,6 +206,23 @@ router.post('/ask', async (req, res) => {
   if (!question) return res.status(400).json({ success: false, message: 'question 不能为空' });
   try {
     const out = await askQuestion(question);
+    return res.json({ success: true, data: out });
+  } catch (e: any) {
+    if (e instanceof AskConfigError) {
+      return res.status(503).json({ success: false, message: e.message });
+    }
+    return res.status(502).json({ success: false, message: `LLM 调用失败: ${e?.message ?? e}` });
+  }
+});
+
+/** 语义报表（M4）：Data Agent 多节报表主链路。供型为强制真 LLM——
+ *  无 key 返回 503 配置指引，不做 Mock 降级；LLM 网络失败如实上报 502。
+ *  每一节复用 M3 问答链路（三道校验逐节不旁路），异常由声明式规则机判标注。 */
+router.post('/report', async (req, res) => {
+  const question = String(req.body?.question ?? '').trim();
+  if (!question) return res.status(400).json({ success: false, message: 'question 不能为空' });
+  try {
+    const out = await askReport(question);
     return res.json({ success: true, data: out });
   } catch (e: any) {
     if (e instanceof AskConfigError) {
